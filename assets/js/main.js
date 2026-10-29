@@ -15,39 +15,55 @@ document.addEventListener("DOMContentLoaded", () => {
   // 1. INJEÇÃO DE LINKS DO CONFIG.JS (PRESERVANDO PARÂMETROS UTM)
   // ------------------------------------------------------------------
   const cfg = window.PAGE_CONFIG || {};
-  const checkouts = cfg.checkout || {};
+  const checkouts = cfg.checkouts || cfg.checkout || {};
 
-  const updateCheckoutUrl = (el, newBase) => {
-    if (!el || !newBase) return;
-    // Se o elemento já tiver query params de UTM / rastreamento adicionados, preserva-os
-    if (el.search && el.search.length > 1) {
-      try {
-        const url = new URL(newBase, window.location.origin);
-        const currentParams = new URLSearchParams(el.search);
-        currentParams.forEach((val, key) => {
+  const getCheckoutWithUtms = (targetUrl) => {
+    if (!targetUrl) return "";
+    try {
+      const url = new URL(targetUrl, window.location.origin);
+      if (window.location.search) {
+        const pageParams = new URLSearchParams(window.location.search);
+        pageParams.forEach((val, key) => {
           url.searchParams.set(key, val);
         });
-        el.href = url.toString();
-        return;
-      } catch (e) {}
+      }
+      return url.toString();
+    } catch (e) {
+      if (window.location.search) {
+        const sep = targetUrl.indexOf("?") !== -1 ? "&" : "?";
+        return targetUrl + sep + window.location.search.substring(1);
+      }
+      return targetUrl;
     }
-    el.href = newBase;
   };
 
-  const btnCompleto = document.getElementById("btn-checkout-completo");
-  if (btnCompleto && checkouts.completo) {
-    updateCheckoutUrl(btnCompleto, checkouts.completo);
-  }
+  const wireCheckoutButton = (elId, checkoutUrl) => {
+    const el = document.getElementById(elId);
+    if (!el || !checkoutUrl) return;
 
-  const btnUpsell = document.getElementById("btn-checkout-upsell");
-  if (btnUpsell && checkouts.upsell) {
-    updateCheckoutUrl(btnUpsell, checkouts.upsell);
-  }
+    if (el.tagName && el.tagName.toLowerCase() === "a") {
+      el.href = getCheckoutWithUtms(checkoutUrl);
+    }
 
-  const btnBasico = document.getElementById("btn-checkout-basico");
-  if (btnBasico && checkouts.basico) {
-    updateCheckoutUrl(btnBasico, checkouts.basico);
-  }
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const finalUrl = getCheckoutWithUtms(checkoutUrl);
+      if (finalUrl) {
+        window.location.href = finalUrl;
+      }
+    });
+  };
+
+  // Botão R$ 19,90 (Card Premium no grid de pacotes)
+  wireCheckoutButton("btn-checkout-premium", checkouts.premium || checkouts.completo);
+  wireCheckoutButton("btn-checkout-completo", checkouts.completo || checkouts.premium);
+
+  // Botão R$ 16,90 (Upgrade especial no pop-up)
+  wireCheckoutButton("btn-checkout-upsell", checkouts.premiumUpgrade || checkouts.upsell);
+
+  // Botão R$ 9,90 (Básico / recusa de upgrade no pop-up)
+  wireCheckoutButton("btn-checkout-basico", checkouts.basico);
 
   // ------------------------------------------------------------------
   // 2. SISTEMA DO POP-UP (APENAS AO CLICAR NO BÁSICO OU AO SAIR DA PÁGINA)

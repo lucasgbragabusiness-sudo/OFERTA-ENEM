@@ -24,22 +24,23 @@ window.PAGE_CONFIG = {
   },
 
   // ------------------------------------------------------------------
-  // 2. CHECKOUTS (GG CHECKOUT / PLATAFORMA DE PAGAMENTO)
-  // Edite as URLs abaixo quando seus links finais estiverem prontos.
-  // Os parâmetros UTM da URL da página serão preservados automaticamente!
+  // 2. CHECKOUTS OFICIAIS (GG CHECKOUT)
+  // Os parâmetros UTM da URL da página são preservados automaticamente!
   // ------------------------------------------------------------------
   checkouts: {
     // Plano Básico (100 mapas mentais) — R$ 9,90
     // Acionado se o lead recusar o upgrade no pop-up:
-    basico: "https://ggcheckout.app/checkout/v5/WZz4IWHeUh5x6qGGgNop?plano=basico_990",
+    basico: "https://ggcheckout.app/checkout/v5/FrP3QEGY8YzBdgTJl41d5C",
 
     // Plano Premium Direto (200 mapas + 5 bônus) — R$ 19,90
     // Acionado ao clicar diretamente no botão do card Premium:
-    premium: "https://ggcheckout.app/checkout/v5/WZz4IWHeUh5x6qGGgNop?plano=premium_1990",
+    premium: "https://ggcheckout.app/checkout/v5/YJ5l9zQAtnHH0yzpidHlOa",
+    completo: "https://ggcheckout.app/checkout/v5/YJ5l9zQAtnHH0yzpidHlOa",
 
     // Plano Premium com Upgrade Especial — R$ 16,90
     // Acionado quando o lead clica em "SIM, QUERO O PREMIUM POR R$ 16,90" no pop-up:
-    premiumUpgrade: "https://ggcheckout.app/checkout/v5/WZz4IWHeUh5x6qGGgNop?plano=upgrade_1690",
+    premiumUpgrade: "https://ggcheckout.app/checkout/v5/dsFxoda14ylWFSoUicypB7",
+    upsell: "https://ggcheckout.app/checkout/v5/dsFxoda14ylWFSoUicypB7",
   },
 
   // ------------------------------------------------------------------
